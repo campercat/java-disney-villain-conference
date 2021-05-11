@@ -46,5 +46,5 @@ in! Looks like we are going to gather information from those in line.
 
 ### Save the verified list
 
-* Now that we have a list of verified villains let's save it to a `verfiedAttendees.json` file, so
+* Now that we have a list of verified villains let's save it to a `verifiedAttendees.json` file, so
   the bouncers know who to let in.
