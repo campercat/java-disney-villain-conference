@@ -1,4 +1,3 @@
-
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
@@ -9,73 +8,60 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class Main {
 
-  public static void main(String[] args) {
+  public static void main(String[] args) throws IOException {
     ClassLoader classLoader = Main.class.getClassLoader();
     File attendeesFile = new File(classLoader.getResource("attendees.json").getFile());
     File lateArrivalsFile = new File(classLoader.getResource("lateArrivals.json").getFile());
-    File alignmentTestFile = new File(classLoader.getResource("alignmentTestResults.json").getFile());
+    File alignmentTestResultsFile = new File(
+        classLoader.getResource("alignmentTestResults.json").getFile());
 
-    try {
-      List<HashMap<String, String>> attendees = new ArrayList<HashMap<String, String>>();
-      ObjectMapper objectMapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
+    List<HashMap<String, String>> attendees = new ArrayList<>();
+    ObjectMapper objectMapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
+    attendees = objectMapper.readValue(attendeesFile, ArrayList.class);
 
-      //Set attendees list
-      attendees = objectMapper.readValue(attendeesFile, ArrayList.class);
-      // Print out formatted json
-      System.out.println("Attendees: \n\n" + attendees);
-      System.out.println(objectMapper.writeValueAsString(attendees));
+    List<HashMap<String, String>> lateArrivalsList = new ArrayList<>();
+    lateArrivalsList = objectMapper.readValue(lateArrivalsFile, ArrayList.class);
 
-      //Add late arrivals to attendees
-      List<HashMap<String, String>> lateArrivals = new ArrayList<HashMap<String, String>>();
-      lateArrivals = objectMapper.readValue(lateArrivalsFile, ArrayList.class);
-      for (HashMap<String, String> character : lateArrivals) {
-        attendees.add(character);
-      }
-
-      //Remove heroes by name
-      List<String> heroNames = new ArrayList<>();
-      heroNames.add("Maui");
-      heroNames.add("Hercules");
-      heroNames.add("Merida");
-
-      List<HashMap<String, String>> attendeesCopy = List.copyOf(attendees);
-      for (HashMap<String, String> character : attendeesCopy) {
-        if (heroNames.contains(character.get("name"))) {
-          attendees.remove(character);
-        }
-      }
-
-      // Update each attendee with their alignment test result
-      Map<String, String> testResults = new HashMap<>();
-      testResults = objectMapper.readValue(alignmentTestFile, HashMap.class);
-
-      Set<String> characterNames = testResults.keySet();
-      for (String characterName : characterNames) {
-        for (HashMap<String, String> attendee : attendees) {
-          if (characterName.equals(attendee.get("name"))) {
-            attendee.put("alignment", testResults.get(characterName));
-          }
-        }
-      }
-
-      // Remove any attendees with an alignment of Good
-      List<HashMap<String, String>> updatedAttendeesCopy = List.copyOf(attendees);
-      for (HashMap<String, String> attendee : updatedAttendeesCopy) {
-        if (attendee.get("alignment").equals("Good")) {
-          attendees.remove(attendee);
-        }
-      }
-
-      //Create a verifiedAttendees.json file with the new attendees list
-      ObjectWriter objectWriter = objectMapper.writer(new DefaultPrettyPrinter());
-      objectWriter.writeValue(new File("verifiedAttendees.json"), attendees);
-
-    } catch (IOException e) {
-      e.printStackTrace();
+    for (HashMap<String, String> lateArrival : lateArrivalsList) {
+      attendees.add(lateArrival);
     }
+
+    List<String> herosToLookFor = new ArrayList<>();
+    herosToLookFor.add("Hercules");
+    herosToLookFor.add("Merida");
+    herosToLookFor.add("Maui");
+
+    List<HashMap<String, String>> attendeesCopy = List.copyOf(attendees);
+    for (HashMap<String, String> attendee : attendeesCopy) {
+      if (herosToLookFor.contains(attendee.get("name"))) {
+//        System.out.println(attendee);
+        attendees.remove(attendee);
+      }
+    }
+
+    Map<String, String> alignmentTestResults = new HashMap<>();
+    alignmentTestResults = objectMapper.readValue(alignmentTestResultsFile, HashMap.class);
+
+    for (HashMap<String, String> attendee : attendees) {
+      String attendeeName = attendee.get("name");
+      String alignmentValue = alignmentTestResults.get(attendeeName);
+      attendee.put("alignment", alignmentValue);
+    }
+
+    List<HashMap<String, String>> updatedAttendeesCopy = List.copyOf(attendees);
+    for (HashMap<String, String> attendee : updatedAttendeesCopy) {
+      if (attendee.get("alignment").equals("Good")) {
+        attendees.remove(attendee);
+      }
+    }
+
+    ObjectWriter objectWriter = objectMapper.writer(new DefaultPrettyPrinter());
+    objectWriter.writeValue(new File("verifiedAttendees.json"), attendees);
+
+//    System.out.println(objectMapper.writeValueAsString(attendees));
+//    System.out.println(objectMapper.writeValueAsString(attendees.size()));
   }
 }
