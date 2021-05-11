@@ -1,0 +1,27 @@
+[
+  {
+    "name": "Cruella De Vil",
+    "favoriteSong" : "Cruella De Vil",
+    "goal": "To make a spotted fur coat."
+  },
+  {
+    "name": "Hercules",
+    "favoriteSong" : "Go the Distance",
+    "goal": "To save Meg."
+  },
+  {
+    "name": "Maui",
+    "favoriteSong" : "You're Welcome",
+    "goal": "To find my fishhook."
+  },
+  {
+    "name": "Adirem",
+    "favoriteSong" : "Touch the Sky",
+    "goal": "To take control of my own Destiny."
+  },
+  {
+    "name": "Tamatoa",
+    "favoriteSong": "Shiny",
+    "goal": "Collect all the shiny and valuable things in the world."
+  }
+]

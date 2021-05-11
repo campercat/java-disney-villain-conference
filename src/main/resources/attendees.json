@@ -1,0 +1,27 @@
+[
+  {
+    "name": "Jafar",
+    "favoriteSong" : "Prince Ali (REMIX!!!)",
+    "goal": "To become the most powerful sorcerer in the universe."
+  },
+  {
+    "name": "Ursula",
+    "favoriteSong" : "Poor Unfortunate Souls",
+    "goal": "To overthrow king Triton and rule the sea."
+  },
+  {
+    "name": "Scar",
+    "favoriteSong" : "Be Prepared",
+    "goal": "To become the king."
+  },
+  {
+    "name": "Gaston",
+    "favoriteSong" : "Gaston",
+    "goal": "To start eating 6 dozen eggs every morning."
+  },
+  {
+    "name": "Monseigneur Claude Frollo",
+    "favoriteSong": "Hellfire",
+    "goal": "To purge the world of vice and sin."
+  }
+]
